@@ -3,13 +3,18 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "hardhat/console.sol";
 
 contract NFT is ERC721, Ownable {
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIds;
+
     constructor(
         string memory name,
         string memory symbol,
         address initialOwner
-    ) ERC721(name, symbol) Ownable(initialOwner) {}
+    ) ERC721(name, symbol) Ownable() {}
 
     struct CarDetails {
         string carImage;
@@ -20,31 +25,35 @@ contract NFT is ERC721, Ownable {
         string engine;
         string horsepower;
     }
-	
 
     mapping(uint256 => CarDetails) public carInfo;
 
     function mintNFT(
         address recipient,
-        uint256 tokenId,
         CarDetails memory details
     ) external onlyOwner {
-        // require(!_exists(tokenId), "NFT: Token ID already exists");
+        // Get the current value of the counter and increment it by one
+        uint256 tokenId = _tokenIds.current();
+        _tokenIds.increment();
+
+        // Mint the NFT with the generated token id
         _mint(recipient, tokenId);
         carInfo[tokenId] = details;
     }
 
-    function setCarDetails(
-        uint256 tokenId,
-        CarDetails memory details
-    ) external onlyOwner {
-        // require(_exists(tokenId), "NFT: Token ID does not exist");
+    function setCarDetails(CarDetails memory details) external onlyOwner {
+        // Get the current value of the counter
+        uint256 tokenId = _tokenIds.current();
+        // Set the car details for the token id
         carInfo[tokenId] = details;
     }
 
-    function getSVG(uint256 tokenId) public view returns (string memory) {
-        // require(_exists(tokenId), "NFT: Token ID does not exist");
+    function getSVG() public view returns (string memory) {
+        // Get the current value of the counter
+        uint256 tokenId = _tokenIds.current();
+        // Get the car details from the mapping
         CarDetails memory details = carInfo[tokenId];
+        // Generate the SVG string as before
         string memory svg = string(
             abi.encodePacked(
                 '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="700" height="600">',
@@ -76,12 +85,10 @@ contract NFT is ERC721, Ownable {
         return svg;
     }
 
-    function safeTransferNFT(
-        address from,
-        address to,
-        uint256 tokenId
-    ) external onlyOwner {
-        // require(_exists(tokenId), "NFT: Token ID does not exist");
+    function safeTransferNFT(address from, address to) external onlyOwner {
+        // Get the current value of the counter
+        uint256 tokenId = _tokenIds.current();
+        // Transfer the NFT with the token id
         safeTransferFrom(from, to, tokenId);
     }
 }

@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-contract NFTAuction is Ownable(msg.sender) {
+contract NFTAuction is Ownable() {
     ERC721 public nftContract;
     IERC20 public paymentToken;
     address public seller;
@@ -13,7 +13,7 @@ contract NFTAuction is Ownable(msg.sender) {
     uint256 public highestBid;
     uint256 public tokenId;
     bool public auctionEnded;
-	
+
 
     event AuctionStarted(address indexed seller, uint256 tokenId);
     event NewBid(address indexed bidder, uint256 amount);
