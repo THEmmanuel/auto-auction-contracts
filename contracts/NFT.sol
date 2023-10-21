@@ -20,6 +20,7 @@ contract NFT is ERC721, Ownable {
         string engine;
         string horsepower;
     }
+	
 
     mapping(uint256 => CarDetails) public carInfo;
 

@@ -13,6 +13,7 @@ contract NFTAuction is Ownable(msg.sender) {
     uint256 public highestBid;
     uint256 public tokenId;
     bool public auctionEnded;
+	
 
     event AuctionStarted(address indexed seller, uint256 tokenId);
     event NewBid(address indexed bidder, uint256 amount);
