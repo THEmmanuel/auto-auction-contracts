@@ -18,6 +18,11 @@
   "homepage": "https://github.com/THEmmanuel/auto-auction-contracts#readme",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "dotenv": "^16.3.1",
+    "ethers": "^6.8.0",
     "hardhat": "^2.18.2"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.0"
   }
 }

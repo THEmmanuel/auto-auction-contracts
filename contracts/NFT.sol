@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -7,8 +7,9 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract NFT is ERC721, Ownable {
     constructor(
         string memory name,
-        string memory symbol
-    ) ERC721(name, symbol) {}
+        string memory symbol,
+        address initialOwner
+    ) ERC721(name, symbol) Ownable(initialOwner) {}
 
     struct CarDetails {
         string carImage;
@@ -27,7 +28,7 @@ contract NFT is ERC721, Ownable {
         uint256 tokenId,
         CarDetails memory details
     ) external onlyOwner {
-        require(!_exists(tokenId), "NFT: Token ID already exists");
+        // require(!_exists(tokenId), "NFT: Token ID already exists");
         _mint(recipient, tokenId);
         carInfo[tokenId] = details;
     }
@@ -36,12 +37,12 @@ contract NFT is ERC721, Ownable {
         uint256 tokenId,
         CarDetails memory details
     ) external onlyOwner {
-        require(_exists(tokenId), "NFT: Token ID does not exist");
+        // require(_exists(tokenId), "NFT: Token ID does not exist");
         carInfo[tokenId] = details;
     }
 
     function getSVG(uint256 tokenId) public view returns (string memory) {
-        require(_exists(tokenId), "NFT: Token ID does not exist");
+        // require(_exists(tokenId), "NFT: Token ID does not exist");
         CarDetails memory details = carInfo[tokenId];
         string memory svg = string(
             abi.encodePacked(
@@ -79,14 +80,7 @@ contract NFT is ERC721, Ownable {
         address to,
         uint256 tokenId
     ) external onlyOwner {
-        require(
-            _isApprovedOrOwner(msg.sender, tokenId),
-            "NFT: Not approved or owner"
-        );
+        // require(_exists(tokenId), "NFT: Token ID does not exist");
         safeTransferFrom(from, to, tokenId);
-    }
-
-    function _exists(uint256 tokenId) internal view returns (bool) {
-        return _exists(tokenId);
     }
 }

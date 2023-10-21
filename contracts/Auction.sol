@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-contract NFTAuction is Ownable {
+contract NFTAuction is Ownable(msg.sender) {
     ERC721 public nftContract;
     IERC20 public paymentToken;
     address public seller;
@@ -37,7 +37,10 @@ contract NFTAuction is Ownable {
     function placeBid(uint256 amount) external {
         require(!auctionEnded, "Auction has ended");
         require(msg.sender != seller, "Seller cannot bid");
-        require(amount > highestBid, "Bid must be higher than the current highest bid");
+        require(
+            amount > highestBid,
+            "Bid must be higher than the current highest bid"
+        );
 
         // Refund the previous highest bidder.
         if (highestBidder != address(0)) {
@@ -63,7 +66,10 @@ contract NFTAuction is Ownable {
 
     function withdraw() external {
         require(auctionEnded, "Auction has not ended yet");
-        require(msg.sender == seller || msg.sender == highestBidder, "You are not eligible to withdraw");
+        require(
+            msg.sender == seller || msg.sender == highestBidder,
+            "You are not eligible to withdraw"
+        );
 
         if (msg.sender == highestBidder) {
             // Refund the bid amount to the highest bidder.
