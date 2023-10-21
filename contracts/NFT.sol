@@ -10,12 +10,7 @@ contract NFT is ERC721, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
-    constructor(
-        string memory name,
-        string memory symbol,
-        address initialOwner
-    ) ERC721(name, symbol) Ownable() {}
-
+    // Declare the CarDetails struct
     struct CarDetails {
         string carImage;
         string make;
@@ -26,7 +21,14 @@ contract NFT is ERC721, Ownable {
         string horsepower;
     }
 
-    mapping(uint256 => CarDetails) public carInfo;
+    // Declare the storage array with public visibility
+    CarDetails[] public carInfo;
+
+    constructor(
+        string memory name,
+        string memory symbol,
+        address initialOwner
+    ) ERC721(name, symbol) Ownable() {}
 
     function mintNFT(
         address recipient,
@@ -38,7 +40,7 @@ contract NFT is ERC721, Ownable {
 
         // Mint the NFT with the generated token id
         _mint(recipient, tokenId);
-        carInfo[tokenId] = details;
+        carInfo.push(details);
     }
 
     function setCarDetails(CarDetails memory details) external onlyOwner {
@@ -85,10 +87,12 @@ contract NFT is ERC721, Ownable {
         return svg;
     }
 
-    function safeTransferNFT(address from, address to) external onlyOwner {
-        // Get the current value of the counter
-        uint256 tokenId = _tokenIds.current();
-        // Transfer the NFT with the token id
+    function safeTransferNFT(
+        address from,
+        address to,
+        uint256 tokenId
+    ) external onlyOwner {
+        // require(_exists(tokenId), "NFT: Token ID does not exist");
         safeTransferFrom(from, to, tokenId);
     }
 }
