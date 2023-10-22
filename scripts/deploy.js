@@ -2,7 +2,7 @@ const hre = require("hardhat");
 
 async function main() {
 	const nft = await hre.ethers.getContractFactory('NFT');
-	const NFT = await nft.deploy('Auto Auction', 'AutoAuction', '0xC4D4Ad0d298ee6392d0e44030E887B07ED6c6009');
+	const NFT = await nft.deploy();
 	await NFT.waitForDeployment();
 	console.log('NFT contract deployed to:', NFT.target);
 
