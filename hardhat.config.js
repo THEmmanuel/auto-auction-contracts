@@ -14,6 +14,11 @@ module.exports = {
 		goerli: {
 			url: ALCHEMY_API_URL,
 			accounts: [`0x${PRIVATE_KEY}`]
-		}
+		},
+
+		scrollTestnet: {
+			url: process.env.SCROLL_TESTNET_URL || "",
+			accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+		},
 	},
 }
